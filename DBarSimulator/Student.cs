@@ -16,8 +16,9 @@ namespace DBarSimulator
 
         public string Name { get; set; }
         public Bar Bar { get; set; }
-        public double budget;
+        public double Budget { get; set; }
         List<string> menu;
+        public int Age { get; set; }
 
         private NightlifeActivities GetRandomNightlifeActivity()
         {
@@ -44,7 +45,15 @@ namespace DBarSimulator
         private void VisitBar()
         {
             Console.WriteLine($"{Name} is getting in the line to enter the bar.");
-            Bar.Enter(this);
+            try
+            {
+                Bar.Enter(this);      
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return;
+            }
             Console.WriteLine($"{Name} entered the bar!");
             bool staysAtBar = true;
             while (staysAtBar)
@@ -75,7 +84,7 @@ namespace DBarSimulator
         {
             this.menu = this.menu == null ? this.getMenu() : this.menu;
             string selectedDrinkName = this.menu[random.Next(this.menu.Count)];
-            Bar.DrinkFromBar(selectedDrinkName, this.budget, random.Next(1,5),this);
+            Bar.DrinkFromBar(selectedDrinkName, this.Budget, random.Next(1,5),this);
         }
 
         public List<string> getMenu()
@@ -108,11 +117,12 @@ namespace DBarSimulator
             Console.WriteLine($"{Name} is going back home.");
         }
 
-        public Student(string name, Bar bar, double budget)
+        public Student(string name, Bar bar, double budget, int age)
         {
             Name = name;
             Bar = bar;
-            this.budget = budget;
+            this.Budget = budget;
+            this.Age = age;
         }
     }
 }

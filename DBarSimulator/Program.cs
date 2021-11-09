@@ -8,6 +8,7 @@ namespace DBarSimulator
     {
         static void Main(string[] args)
         {
+            Random random = new Random();
             List<Drink> drinks = new List<Drink>()
             {
                 new Drink(12,"vodka",12),
@@ -20,8 +21,8 @@ namespace DBarSimulator
             Bar bar = new Bar(drinks);
             List<Thread> studentThreads = new List<Thread>();
             for (int i = 1; i < 2; i++)
-            {
-                var student = new Student(i.ToString(), bar,100);
+            {       
+                var student = new Student(i.ToString(), bar,100,random.Next(1,80));
                 var thread = new Thread(student.PaintTheTownRed);
                 thread.Start();
                 studentThreads.Add(thread);

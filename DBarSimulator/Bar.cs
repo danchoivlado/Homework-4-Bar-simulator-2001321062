@@ -32,7 +32,7 @@ namespace DBarSimulator
                     }
 
                     drink.GiveDrinkToStudent(givenMoney, quantity);
-                    student.budget -= drink.Price * quantity;
+                    student.Budget -= drink.Price * quantity;
                     Console.WriteLine($"{student.Name} drinked {drink.Name} for {drink.Price*quantity}");
                 }
             }
@@ -47,6 +47,10 @@ namespace DBarSimulator
             semaphore.WaitOne();
             lock (students)
             {
+                if (student.Age < 18)
+                {
+                    throw new InvalidOperationException($"Student {student.Name} is not old enough to ente the bar");
+                }
                 students.Add(student);
             }
         }
