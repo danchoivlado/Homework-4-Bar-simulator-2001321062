@@ -16,6 +16,8 @@ namespace DBarSimulator
 
         public string Name { get; set; }
         public Bar Bar { get; set; }
+        public double budget;
+        List<string> menu;
 
         private NightlifeActivities GetRandomNightlifeActivity()
         {
@@ -55,7 +57,7 @@ namespace DBarSimulator
                         Thread.Sleep(100);
                         break;
                     case BarActivities.Drink:
-                        Console.WriteLine($"{Name} is drinking.");
+                        this.Drink();
                         Thread.Sleep(100);
                         break;
                     case BarActivities.Leave:
@@ -66,6 +68,19 @@ namespace DBarSimulator
                     default: throw new NotImplementedException();
                 }
             }
+        }
+        
+
+        public void Drink()
+        {
+            this.menu = this.menu == null ? this.getMenu() : this.menu;
+            string selectedDrinkName = this.menu[random.Next(this.menu.Count)];
+            Bar.DrinkFromBar(selectedDrinkName, this.budget, random.Next(1,5),this);
+        }
+
+        public List<string> getMenu()
+        {
+            return this.Bar.drinks.Select(x => x.Name).ToList();
         }
 
         public void PaintTheTownRed()
@@ -93,10 +108,11 @@ namespace DBarSimulator
             Console.WriteLine($"{Name} is going back home.");
         }
 
-        public Student(string name, Bar bar)
+        public Student(string name, Bar bar, double budget)
         {
             Name = name;
             Bar = bar;
+            this.budget = budget;
         }
     }
 }
