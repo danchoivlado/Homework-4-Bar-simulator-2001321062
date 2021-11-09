@@ -10,12 +10,14 @@ namespace DBarSimulator
         List<Student> students;
         Semaphore semaphore;
         public List<Drink> drinks;
+        public bool isClosed { get; set; }
 
         public Bar(List<Drink> drinks)
         {
             this.students = new List<Student>();
             this.semaphore = new Semaphore(10, 10);
             this.drinks = drinks;
+            this.isClosed = false;
         }
 
         public void DrinkFromBar(string chosenDrinkName, double givenMoney, int quantity, Student student)
@@ -47,6 +49,10 @@ namespace DBarSimulator
             semaphore.WaitOne();
             lock (students)
             {
+                if (this.isClosed)
+                {
+                    throw new InvalidOperationException("The bar is already closed!");
+                }
                 if (student.Age < 18)
                 {
                     throw new InvalidOperationException($"Student {student.Name} is not old enough to ente the bar");
@@ -62,6 +68,18 @@ namespace DBarSimulator
                 students.Remove(student);
             }
             semaphore.Release();
+        }
+
+        public void Close()
+        {
+            this.isClosed = true;
+            lock (students) { 
+                foreach (var student in this.students.ToArray().ToList())
+                {
+                    this.Leave(student);
+                    Console.WriteLine($"Student {student.Name} is kicked reason:bar is closing");
+                }
+            }
         }
     }
 }

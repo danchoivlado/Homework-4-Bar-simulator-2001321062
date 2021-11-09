@@ -56,7 +56,7 @@ namespace DBarSimulator
             }
             Console.WriteLine($"{Name} entered the bar!");
             bool staysAtBar = true;
-            while (staysAtBar)
+            while (staysAtBar && Bar.isClosed == false)
             {
                 var nextActivity = GetRandomBarActivity();
                 switch (nextActivity)
