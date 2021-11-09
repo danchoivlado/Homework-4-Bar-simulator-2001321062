@@ -20,7 +20,7 @@ namespace DBarSimulator
 
             Bar bar = new Bar(drinks);
             List<Thread> studentThreads = new List<Thread>();
-            for (int i = 1; i <50; i++)
+            for (int i = 1; i <25; i++)
             {       
                 var student = new Student(i.ToString(), bar,100,random.Next(1,80));
                 var thread = new Thread(student.PaintTheTownRed);
@@ -31,6 +31,7 @@ namespace DBarSimulator
             foreach (var t in studentThreads) t.Join();
             Console.WriteLine();
             Console.WriteLine("The party is over.");
+            bar.Report();
             Console.ReadLine();
         }
     }

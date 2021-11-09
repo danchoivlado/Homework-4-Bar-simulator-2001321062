@@ -10,6 +10,7 @@ namespace DBarSimulator
         List<Student> students;
         Semaphore semaphore;
         public List<Drink> drinks;
+        private Dictionary<Drink, int> reportBook;
         public bool isClosed { get; set; }
 
         public Bar(List<Drink> drinks)
@@ -18,6 +19,7 @@ namespace DBarSimulator
             this.semaphore = new Semaphore(10, 10);
             this.drinks = drinks;
             this.isClosed = false;
+            this.reportBook = new Dictionary<Drink, int>();
         }
 
         public void DrinkFromBar(string chosenDrinkName, double givenMoney, int quantity, Student student)
@@ -35,6 +37,7 @@ namespace DBarSimulator
 
                     drink.GiveDrinkToStudent(givenMoney, quantity);
                     student.Budget -= drink.Price * quantity;
+                    this.addToReportBook(drink, quantity);
                     Console.WriteLine($"{student.Name} drinked {drink.Name} for {drink.Price*quantity}");
                 }
             }
@@ -42,6 +45,16 @@ namespace DBarSimulator
             {
                 Console.WriteLine(ex.Message);
             }
+        }
+
+        private void addToReportBook(Drink drink, int chosenQuantity)
+        {
+            if (!this.reportBook.ContainsKey(drink))
+            {
+                this.reportBook.Add(drink, 0);
+            }
+
+            this.reportBook[drink] += chosenQuantity;
         }
 
         public void Enter(Student student)
@@ -79,6 +92,16 @@ namespace DBarSimulator
                     this.Leave(student);
                     Console.WriteLine($"Student {student.Name} is kicked reason:bar is closing");
                 }
+            }
+        }
+
+        public void Report()
+        {
+            foreach (var report in this.reportBook)
+            {
+                var drink = report.Key;
+                var soldTimes = report.Value;
+                Console.WriteLine($"Drink {drink.Name} was sold {soldTimes} and has quantity of {drink.Quantity}");
             }
         }
     }
