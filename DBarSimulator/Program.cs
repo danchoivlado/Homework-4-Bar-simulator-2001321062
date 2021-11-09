@@ -26,12 +26,6 @@ namespace DBarSimulator
                 var thread = new Thread(student.PaintTheTownRed);
                 thread.Start();
                 studentThreads.Add(thread);
-
-                int chance = random.Next(0, 100);
-                if (chance < 5)
-                {
-                    bar.Close();
-                }
             }
 
             foreach (var t in studentThreads) t.Join();
